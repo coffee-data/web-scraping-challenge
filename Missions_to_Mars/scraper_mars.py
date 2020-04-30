@@ -5,11 +5,12 @@ import time
 
 def init_browser():
 	executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
-	return "HELLO PLEASE"
+	return Browser('chrome', **executable_path, headless=False)
 
-def scraper():
+def scrape():
+	
 	browser = init_browser()
-
+	
 	# Visit NASA
 	url = 'https://mars.nasa.gov/news/'
 	browser.visit(url)
@@ -62,7 +63,7 @@ def scraper():
 	    a = article.find('a')
 	    # Concatenate with base url
 	    featured_image_url = 'https://www.jpl.nasa.gov/' + a['data-fancybox-href']
-	
+
 	# Put results in dict
 	FEAT_IMG = [{
 	"FEAT_IMG":featured_image_url
@@ -74,18 +75,31 @@ def scraper():
 	browser.visit(url)
 
 	# Pause, continue
-	time.sleep(2)
+	time.sleep(3)
+
+	# HTML object
+	html = browser.html
+	# Parse HTML with Beautiful Soup
+	soup = BeautifulSoup(html, 'html.parser')
+	# Sleep
+	time.sleep(3)
 
 	# HTML object
 	html = browser.html
 	# Parse HTML with Beautiful Soup
 	soup = BeautifulSoup(html, 'html.parser')
 	# Retrieve all elements that contain book information
-	tweets = soup.find('div', class_='css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-5f2r5o r-1mi0q7o')
+	tweets = soup.find_all(attrs={"data-testid": "tweet"})
+	spans = soup.find_all('span', class_='css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0')
 
-	div = tweets.find('div', class_='css-901oao r-jwli3a r-1qd0xha r-a023e6 r-16dba41 r-ad9z0x r-bcqeeo r-bnwqim r-qvutc0')
-	span = div.find('span', class_='css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0')
-	mars_weather = span.text
+	for span in spans:
+	    if "InSight" in span.text:
+	        result = span.text
+	        break
+	        
+	mars_weather = result
+
+	mars_weather = result
 
 	MARS_WEATHER = [{
 	"MARS_WEATHER":mars_weather
@@ -194,7 +208,7 @@ def scraper():
 	"MARS_IMGS":hemisphere_image_urls
 	}]
 
-	final_dict = {
+	scraped_data = {
 	"NASA_NEWS":NASA_NEWS,
 	"FEAT_IMG":FEAT_IMG,
 	"MARS_WEATHER":MARS_WEATHER,
@@ -202,4 +216,11 @@ def scraper():
 	"MARS_IMGS":MARS_IMGS
 	}
 
-	return final_dict
+	print(f"""
+	----------------------FIN----------------------
+
+		""")
+
+	browser.quit()
+
+	return scraped_data
