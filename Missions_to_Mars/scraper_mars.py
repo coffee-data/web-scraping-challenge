@@ -10,7 +10,7 @@ def init_browser():
 def scrape():
 	
 	browser = init_browser()
-	
+
 	# Visit NASA
 	url = 'https://mars.nasa.gov/news/'
 	browser.visit(url)
@@ -26,22 +26,22 @@ def scrape():
 	articles = soup.find_all('li', class_='slide')
 
 	for article in articles:
-	    # Retrieve specific div with class
-	    div = article.find('div', class_='content_title')
-	    # Funnel to 'a'
-	    title = div.find('a')
-	    # Only grab text
-	    news_title = title.text
-	    # Retrieve specific div with class
-	    div = article.find('div', class_='article_teaser_body')
-	    # Only grab text
-	    news_p = div.text
-	    
+		# Retrieve specific div with class
+		div = article.find('div', class_='content_title')
+		# Funnel to 'a'
+		title = div.find('a')
+		# Only grab text
+		news_title = title.text
+		# Retrieve specific div with class
+		div = article.find('div', class_='article_teaser_body')
+		# Only grab text
+		news_p = div.text
+		
 	# Put results in dict
-	NASA_NEWS = [{
-	    "news_title":news_title,
-	    "news_p":news_p
-	}]
+	NASA_NEWS = {
+		"news_title":news_title,
+		"news_p":news_p
+	}
 
 
 	# Visit NASA images
@@ -59,15 +59,15 @@ def scrape():
 	articles = soup.find_all('article', class_='carousel_item')
 
 	for article in articles:
-	    # Retrieve a to find href
-	    a = article.find('a')
-	    # Concatenate with base url
-	    featured_image_url = 'https://www.jpl.nasa.gov/' + a['data-fancybox-href']
+		# Retrieve a to find href
+		a = article.find('a')
+		# Concatenate with base url
+		featured_image_url = 'https://www.jpl.nasa.gov/' + a['data-fancybox-href']
 
 	# Put results in dict
-	FEAT_IMG = [{
+	FEAT_IMG = {
 	"FEAT_IMG":featured_image_url
-	}]
+	}
 
 
 	# Visit Mars Twitter
@@ -93,17 +93,17 @@ def scrape():
 	spans = soup.find_all('span', class_='css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0')
 
 	for span in spans:
-	    if "InSight" in span.text:
-	        result = span.text
-	        break
-	        
+		if "InSight" in span.text:
+			result = span.text
+			break
+			
 	mars_weather = result
 
 	mars_weather = result
 
-	MARS_WEATHER = [{
+	MARS_WEATHER = {
 	"MARS_WEATHER":mars_weather
-	}]
+	}
 
 
 	# Visit Spcae Facts
@@ -121,8 +121,8 @@ def scrape():
 	df = tables[0]
 	# Name columns
 	df.columns = [
-	    'Data_Type',
-	    'Data_Value'
+		'Data_Type',
+		'Data_Value'
 	]
 	# Preview
 	df.head()
@@ -141,9 +141,9 @@ def scrape():
 	# Save to file
 	df.to_html('table.html')
 
-	SPACE_TABLE = [{
-	"SPACE_TABLE":df
-	}]
+	SPACE_TABLE = {
+	"SPACE_TABLE":df.to_html()
+	}
 
 
 	# Visit Astrology
@@ -166,47 +166,47 @@ def scrape():
 
 	# Iterate through each book
 	for photo in photos:
-	    
-	    section = photo.find('a', class_='itemLink product-item')
-	    href_text = section.find('h3').text
-	    
-	    # Assign for dict
-	    title = href_text
-	    
-	    try:
-	        browser.click_link_by_partial_text(href_text)
-	        
-	        # HTML object
-	        html = browser.html
-	        # Parse HTML with Beautiful Soup
-	        soup = BeautifulSoup(html, 'html.parser')
-	        # Retrieve all elements that contain book information
-	        
-	        divs = soup.find('div', class_='downloads')
-	        a_href = divs.find('a')
-	        href = a_href['href']
-	        
-	        # Assign for dict
-	        img_url = href
-	        
-	        # Create a dictionary with elements
-	        dict = ({
-	            'title':title,
-	            'img_url':img_url
-	        })
-	        
-	        # Append to outside list
-	        hemisphere_image_urls.append(dict)
-	        
-	        # Return to previous page
-	        browser.back()
-	    
-	    except:
-	        print('Whoops')
+		
+		section = photo.find('a', class_='itemLink product-item')
+		href_text = section.find('h3').text
+		
+		# Assign for dict
+		title = href_text
+		
+		try:
+			browser.click_link_by_partial_text(href_text)
+			
+			# HTML object
+			html = browser.html
+			# Parse HTML with Beautiful Soup
+			soup = BeautifulSoup(html, 'html.parser')
+			# Retrieve all elements that contain book information
+			
+			divs = soup.find('div', class_='downloads')
+			a_href = divs.find('a')
+			href = a_href['href']
+			
+			# Assign for dict
+			img_url = href
+			
+			# Create a dictionary with elements
+			dict = ({
+				'title':title,
+				'img_url':img_url
+			})
+			
+			# Append to outside list
+			hemisphere_image_urls.append(dict)
+			
+			# Return to previous page
+			browser.back()
+		
+		except:
+			print('Whoops')
 
-	MARS_IMGS = [{
+	MARS_IMGS = {
 	"MARS_IMGS":hemisphere_image_urls
-	}]
+	}
 
 	scraped_data = {
 	"NASA_NEWS":NASA_NEWS,
@@ -222,5 +222,7 @@ def scrape():
 		""")
 
 	browser.quit()
+
+	print(scraped_data)
 
 	return scraped_data

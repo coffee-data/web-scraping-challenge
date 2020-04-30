@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Hot Finds</title>
+  <title>ALIENS ARE REAL</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 
@@ -13,16 +13,61 @@
   <div class="container">
 
     <div class="jumbotron text-center">
-      <h1>Hot Finds On Craigslist</h1>
-      <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Find An Awesome Deal!</a></p>
+      <h1>Mission to Mars</h1>
+      <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Scrape New Data</a></p>
     </div>
 
     <!-- Craigslist Listings -->
     <div class="row">
-      <div class="col-md-12">
-        <h4 class="heading">This is just some text.</h4>
-        <small></small>
-      </div>
+        <div class="col-md-8">
+            <h2 class="heading">Latest Mars News</h2>
+            <h3 class="heading">{{ mars_listings.NASA_NEWS.news_title }}</h3>
+            <p class="heading">{{ mars_listings.NASA_NEWS.news_p }}</p>
+        </div>
+        <div class="col-md-4">
+            <!-- Mars Weather -->
+            <h2 class="heading">Current Mars Weather</h2>
+            <p>{{ mars_listings.MARS_WEATHER.MARS_WEATHER }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Mars Featured Img -->
+            <h2 class="heading">Featured Mars Image</h2>
+            <div>
+                <img src='{{mars_listings.FEAT_IMG.FEAT_IMG}}' class="img-responsive">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <!-- Mars Facts -->
+            <h3>Mars Facts</h3>
+            {{ mars_listings.SPACE_TABLE.SPACE_TABLE | safe }}
+        </div>
+    </div>
+    <div class="row text-center border-top-0">
+            <!-- Mars Hemishpheres -->
+            <h2>Mars Hemispheres</h2>
+        <div class="col-md-6">
+            <h3>{{ mars_listings.MARS_IMGS.MARS_IMGS[0].title }}</h3>
+            <img src= '{{mars_listings.MARS_IMGS.MARS_IMGS[0].img_url}}' class="img-responsive">
+        </div>   
+        <div class="col-md-6">
+            <!-- Mars Hemishpheres -->
+            <h2>{{ mars_listings.MARS_IMGS.MARS_IMGS[1].title }}</h2>
+            <img src={{ mars_listings.MARS_IMGS.MARS_IMGS[1].img_url }} class="img-responsive">
+          </div>   
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Mars Hemishpheres -->
+            <h3>{{ mars_listings.MARS_IMGS.MARS_IMGS[2].title }}</h3>
+            <img src={{ mars_listings.MARS_IMGS.MARS_IMGS[2].img_url }} class="img-responsive">
+        </div>   
+        <div class="col-md-6">
+            <!-- Mars Hemishpheres -->
+            <h3>{{ mars_listings.MARS_IMGS.MARS_IMGS[3].title }} </h3>
+            <img src={{ mars_listings.MARS_IMGS.MARS_IMGS[3].img_url }} class="img-responsive">
+          </div> 
     </div>
 
   </div>
